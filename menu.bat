@@ -1,20 +1,50 @@
 @echo off
 setlocal
 
-REM Ruta del script de Python
+:menu
+cls
+echo ==========================================
+echo            MENU PRINCIPAL
+echo ==========================================
+echo 1. Aplicar ambas acciones (RECOMENDADO!)
+echo 2. Crear un archivo bat en la carpeta de inicio
+echo 3. Colocar un icono en el inicio
+echo 4. Salir
+echo ==========================================
+set /p choice="Seleccione una opcion (1-4): "
+
+if "%choice%"=="1" goto aplicar_ambas
+if "%choice%"=="2" goto crear_bat
+if "%choice%"=="3" goto colocar_icono
+if "%choice%"=="4" goto salir
+goto menu
+
+:colocar_icono
+python "%~dp0src\python-code\crear_acceso_directo.py"
+pause
+goto menu
+
+:crear_bat
 set SCRIPT_PATH=%~dp0src\python-code\verificar_inicio.py
-
-REM Ruta del directorio de inicio
 set STARTUP_DIR=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup
-
-REM Ruta del archivo bat que se creará en el inicio
 set BAT_FILE=%STARTUP_DIR%\verificar_inicio.bat
-
-REM Crear el archivo bat que llamará al script de Python directamente en el directorio de inicio
 echo @echo off > "%BAT_FILE%"
 echo python "%SCRIPT_PATH%" >> "%BAT_FILE%"
-
 echo El archivo verificar_inicio.bat ha sido creado en el directorio de inicio.
-
-endlocal
 pause
+goto menu
+
+:aplicar_ambas
+python "%~dp0src\python-code\crear_acceso_directo.py"
+set SCRIPT_PATH=%~dp0src\python-code\verificar_inicio.py
+set STARTUP_DIR=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup
+set BAT_FILE=%STARTUP_DIR%\verificar_inicio.bat
+echo @echo off > "%BAT_FILE%"
+echo python "%SCRIPT_PATH%" >> "%BAT_FILE%"
+echo El archivo verificar_inicio.bat ha sido creado en el directorio de inicio.
+pause
+goto menu
+
+:salir
+endlocal
+exit
