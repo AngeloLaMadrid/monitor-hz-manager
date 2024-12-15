@@ -4,20 +4,17 @@ setlocal
 REM Ruta del script de Python
 set SCRIPT_PATH=%~dp0src\python-code\verificar_inicio.py
 
-REM Ruta del archivo bat que se copiará al inicio
-set BAT_FILE=%~dp0verificar_inicio.bat
-
-REM Crear el archivo bat que llamará al script de Python
-echo @echo off > "%BAT_FILE%"
-echo python "%SCRIPT_PATH%" >> "%BAT_FILE%"
-
 REM Ruta del directorio de inicio
 set STARTUP_DIR=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup
 
-REM Copiar el archivo bat al directorio de inicio
-copy "%BAT_FILE%" "%STARTUP_DIR%"
+REM Ruta del archivo bat que se creará en el inicio
+set BAT_FILE=%STARTUP_DIR%\verificar_inicio.bat
 
-echo El archivo verificar_inicio.bat ha sido copiado al directorio de inicio.
+REM Crear el archivo bat que llamará al script de Python directamente en el directorio de inicio
+echo @echo off > "%BAT_FILE%"
+echo python "%SCRIPT_PATH%" >> "%BAT_FILE%"
+
+echo El archivo verificar_inicio.bat ha sido creado en el directorio de inicio.
 
 endlocal
 pause

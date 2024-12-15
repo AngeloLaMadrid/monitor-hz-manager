@@ -7,11 +7,6 @@ import re
 import tkinter as tk
 from tkinter import ttk
 
-ACCESOS_DIRECTOS = {
-    "local": "verificar_hz.lnk",
-    "escritorio": os.path.join(os.path.expanduser("~\\Desktop"), "verificar_hz.lnk")
-}
-
 CONFIGURACIONES_HZ = {
     60: os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'icons', '60_hz.ico')),
     144: os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'icons', '144_hz.ico'))
@@ -25,37 +20,32 @@ def obtener_ruta_icono(frecuencia: int) -> str:
 
 def obtener_hz_del_icono() -> tuple[int, bool]:
     try:
-        resultados = {}
-        for ubicacion, path in ACCESOS_DIRECTOS.items():
-            if not os.path.exists(path):
-                print(f"El acceso directo en {ubicacion} no existe.")
-                continue
+        desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
+        shortcut_path = os.path.join(desktop_path, "verificar_hz.lnk")
 
-            shell = win32com.client.Dispatch("WScript.Shell")
-            shortcut = shell.CreateShortCut(path)
-            icon_path = shortcut.IconLocation.split(',')[0]
-            
-            if not os.path.exists(icon_path):
-                print(f"El archivo de icono no existe: {icon_path}")
-                continue
+        if not os.path.exists(shortcut_path):
+            print(f"El acceso directo en el escritorio no existe.")
+            return None, False
 
-            icon_filename = os.path.basename(icon_path)
-            match = re.search(r'(\d+)_hz\.ico', icon_filename.lower())
-            
-            if match:
-                resultados[ubicacion] = int(match.group(1))
-            else:
-                print(f"No se encontró coincidencia en el icono de {ubicacion}")
-                return None, False
+        shell = win32com.client.Dispatch("WScript.Shell")
+        shortcut = shell.CreateShortCut(shortcut_path)
+        icon_path = shortcut.IconLocation.split(',')[0]
 
-        if len(resultados) == 2 and len(set(resultados.values())) == 1:
-            return list(resultados.values())[0], True
+        if not os.path.exists(icon_path):
+            print(f"El archivo de icono no existe: {icon_path}")
+            return None, False
+
+        icon_filename = os.path.basename(icon_path)
+        match = re.search(r'(\d+)_hz\.ico', icon_filename.lower())
+
+        if match:
+            return int(match.group(1)), True
         else:
-            print("Los accesos directos tienen diferentes frecuencias o faltan accesos directos")
+            print(f"No se encontró coincidencia en el icono del escritorio")
             return None, False
 
     except Exception as e:
-        manejar_error("Error al leer Hz de los iconos", e)
+        manejar_error("Error al leer Hz del icono", e)
         return None, False
 
 def cambiar_icono_acceso_directo(frecuencia: int) -> bool:
@@ -65,22 +55,19 @@ def cambiar_icono_acceso_directo(frecuencia: int) -> bool:
             print(f"No hay icono definido para {frecuencia}Hz o no existe el archivo.")
             return False
 
-        exito = True
-        for ubicacion, path in ACCESOS_DIRECTOS.items():
-            try:
-                shell = win32com.client.Dispatch("WScript.Shell")
-                shortcut = shell.CreateShortCut(path)
-                shortcut.IconLocation = f"{os.path.abspath(icono)},0"
-                shortcut.save()
-                print(f"Icono actualizado en {ubicacion}")
-            except Exception as e:
-                manejar_error(f"Error al actualizar icono en {ubicacion}", e)
-                exito = False
+        desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
+        shortcut_path = os.path.join(desktop_path, "verificar_hz.lnk")
 
-        return exito
+        shell = win32com.client.Dispatch("WScript.Shell")
+        shortcut = shell.CreateShortCut(shortcut_path)
+        shortcut.IconLocation = f"{os.path.abspath(icono)},0"
+        shortcut.save()
+        print(f"Icono actualizado en el escritorio")
+
+        return True
 
     except Exception as e:
-        manejar_error("Error al cambiar los iconos", e)
+        manejar_error("Error al cambiar el icono", e)
         return False
 
 def obtener_siguiente_frecuencia(frecuencia_actual: int) -> int:
@@ -165,10 +152,10 @@ def main():
     hz_icono, coinciden = obtener_hz_del_icono()
 
     if not coinciden or hz_icono != frecuencia_actual:
-        print(f"\nLa frecuencia del monitor ({frecuencia_actual}Hz) no coincide con los iconos")
-        print("Actualizando iconos...")
+        print(f"\nLa frecuencia del monitor ({frecuencia_actual}Hz) no coincide con el icono del escritorio")
+        print("Actualizando icono...")
         if cambiar_icono_acceso_directo(frecuencia_actual):
-            print("Iconos actualizados correctamente.")
+            print("Icono actualizado correctamente.")
         return
     
     siguiente_frecuencia = obtener_siguiente_frecuencia(frecuencia_actual)
@@ -176,9 +163,9 @@ def main():
     
     if cambiar_frecuencia_monitor(siguiente_frecuencia):
         if cambiar_icono_acceso_directo(siguiente_frecuencia):
-            print("Iconos actualizados correctamente.")
+            print("Icono actualizado correctamente.")
         else:
-            print("Error al actualizar los iconos.")
+            print("Error al actualizar el icono.")
     else:
         print("Error al cambiar la frecuencia del monitor.")
     
