@@ -26,14 +26,6 @@ def crear_acceso_directo():
         frecuencia_actual = obtener_frecuencia_monitor()
         icono_path = obtener_ruta_icono(frecuencia_actual) or os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "icons", "error.ico"))
         
-        # Crear acceso directo local
-        shortcut_local = shell.CreateShortCut("verificar_hz.lnk")
-        shortcut_local.TargetPath = python_path
-        shortcut_local.Arguments = f'"{script_path}"'
-        shortcut_local.WorkingDirectory = os.path.dirname(script_path)
-        shortcut_local.IconLocation = f"{icono_path},0"
-        shortcut_local.save()
-        
         # Crear acceso directo en el escritorio
         shortcut_desktop = shell.CreateShortCut(os.path.join(desktop_path, "verificar_hz.lnk"))
         shortcut_desktop.TargetPath = python_path
@@ -42,7 +34,7 @@ def crear_acceso_directo():
         shortcut_desktop.IconLocation = f"{icono_path},0"
         shortcut_desktop.save()
         
-        print("Accesos directos creados exitosamente")
+        print("Acceso directo creado exitosamente en el escritorio")
         
     except Exception as e:
         manejar_error("Error al crear acceso directo", e)
