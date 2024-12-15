@@ -17,6 +17,12 @@ CONFIGURACIONES_HZ = {
     144: os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'icons', '144_hz.ico'))
 }
 
+def manejar_error(mensaje: str, e: Exception) -> None:
+    print(f"{mensaje}: {e}")
+
+def obtener_ruta_icono(frecuencia: int) -> str:
+    return CONFIGURACIONES_HZ.get(frecuencia)
+
 def obtener_hz_del_icono() -> tuple[int, bool]:
     try:
         resultados = {}
@@ -49,12 +55,12 @@ def obtener_hz_del_icono() -> tuple[int, bool]:
             return None, False
 
     except Exception as e:
-        print(f"Error al leer Hz de los iconos: {e}")
+        manejar_error("Error al leer Hz de los iconos", e)
         return None, False
 
 def cambiar_icono_acceso_directo(frecuencia: int) -> bool:
     try:
-        icono = CONFIGURACIONES_HZ.get(frecuencia)
+        icono = obtener_ruta_icono(frecuencia)
         if not icono or not os.path.exists(icono):
             print(f"No hay icono definido para {frecuencia}Hz o no existe el archivo.")
             return False
@@ -68,13 +74,13 @@ def cambiar_icono_acceso_directo(frecuencia: int) -> bool:
                 shortcut.save()
                 print(f"Icono actualizado en {ubicacion}")
             except Exception as e:
-                print(f"Error al actualizar icono en {ubicacion}: {e}")
+                manejar_error(f"Error al actualizar icono en {ubicacion}", e)
                 exito = False
 
         return exito
 
     except Exception as e:
-        print(f"Error al cambiar los iconos: {e}")
+        manejar_error("Error al cambiar los iconos", e)
         return False
 
 def obtener_siguiente_frecuencia(frecuencia_actual: int) -> int:
@@ -101,7 +107,7 @@ def cambiar_frecuencia_monitor(frecuencia: int) -> bool:
             print(f"Fallo al cambiar la frecuencia a {frecuencia}Hz. Resultado: {result}")
             return False
     except Exception as e:
-        print(f"Error al cambiar la frecuencia: {e}")
+        manejar_error("Error al cambiar la frecuencia", e)
         return False
 
 def obtener_frecuencia_monitor() -> int:
@@ -112,7 +118,7 @@ def obtener_frecuencia_monitor() -> int:
         print(f"Frecuencia actual del monitor: {frecuencia}Hz")
         return frecuencia
     except Exception as e:
-        print(f"Error al obtener frecuencia: {e}")
+        manejar_error("Error al obtener frecuencia", e)
         return 60
 
 def mostrar_ventana_advertencia(frecuencia: int, frecuencias_soportadas: list) -> None:
@@ -146,7 +152,7 @@ def validar_frecuencia_soportada(frecuencia: int) -> bool:
             return False
         return True
     except Exception as e:
-        print(f"Error al validar frecuencia: {e}")
+        manejar_error("Error al validar frecuencia", e)
         return False
 
 def main():

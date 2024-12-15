@@ -1,24 +1,14 @@
 import sys
 import os
 import win32com.client
-from cambiar_hz import obtener_frecuencia_monitor
+from cambiar_hz import obtener_frecuencia_monitor, manejar_error, obtener_ruta_icono
 
 def obtener_ubicacion_python():
     try:
         return sys.executable
     except Exception as e:
-        print(f"Error al obtener la ubicación de python.exe: {e}")
+        manejar_error("Error al obtener la ubicación de python.exe", e)
         return None
-
-def obtener_icono_hz():
-    try:
-        frecuencia_actual = obtener_frecuencia_monitor()
-        icono_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "icons", f"{frecuencia_actual}_hz.ico"))
-        if os.path.exists(icono_path):
-            return icono_path
-        return os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "icons", "error.ico"))
-    except:
-        return os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "icons", "error.ico"))
 
 def crear_acceso_directo():
     try:
@@ -33,7 +23,8 @@ def crear_acceso_directo():
         desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
         shell = win32com.client.Dispatch("WScript.Shell")
         
-        icono_path = obtener_icono_hz()
+        frecuencia_actual = obtener_frecuencia_monitor()
+        icono_path = obtener_ruta_icono(frecuencia_actual) or os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "icons", "error.ico"))
         
         # Crear acceso directo local
         shortcut_local = shell.CreateShortCut("verificar_hz.lnk")
@@ -54,7 +45,7 @@ def crear_acceso_directo():
         print("Accesos directos creados exitosamente")
         
     except Exception as e:
-        print(f"Error al crear acceso directo: {e}")
+        manejar_error("Error al crear acceso directo", e)
 
 if __name__ == "__main__":
     crear_acceso_directo()
