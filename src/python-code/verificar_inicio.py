@@ -1,15 +1,9 @@
-from cambiar_hz import obtener_frecuencia_monitor, cambiar_icono_acceso_directo, validar_frecuencia_soportada, obtener_hz_del_icono
+from cambiar_hz import obtener_frecuencia_monitor, cambiar_icono_acceso_directo, CONFIGURACIONES_HZ
 
 def main():
-    # Verificar y actualizar iconos de los accesos directos si existen
-    hz_icono, coinciden = obtener_hz_del_icono()
-    if not coinciden:
-        print("Los iconos de los accesos directos no coinciden. Actualizando iconos...")
-        cambiar_icono_acceso_directo(hz_icono)
-
     frecuencia_actual = obtener_frecuencia_monitor()
-
-    if not validar_frecuencia_soportada(frecuencia_actual):
+    
+    if frecuencia_actual not in CONFIGURACIONES_HZ:
         print("Frecuencia no soportada")
         return
     
@@ -19,4 +13,4 @@ def main():
         print("Error al actualizar los iconos")
 
 if __name__ == "__main__":
-    main()
+    main()  
