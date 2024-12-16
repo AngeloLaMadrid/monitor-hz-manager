@@ -1,5 +1,5 @@
 from cambiar_hz import getMonitorFrequency, changeShortcutIcon, HZ_CONFIGURATIONS
-
+ 
 def main():
     currentFrequency = getMonitorFrequency()
     
