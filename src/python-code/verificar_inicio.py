@@ -1,16 +1,16 @@
-from cambiar_hz import obtener_frecuencia_monitor, cambiar_icono_acceso_directo, CONFIGURACIONES_HZ
+from cambiar_hz import getMonitorFrequency, changeShortcutIcon, HZ_CONFIGURATIONS
 
 def main():
-    frecuencia_actual = obtener_frecuencia_monitor()
+    currentFrequency = getMonitorFrequency()
     
-    if frecuencia_actual not in CONFIGURACIONES_HZ:
+    if currentFrequency not in HZ_CONFIGURATIONS:
         print("Frecuencia no soportada")
         return
     
-    if cambiar_icono_acceso_directo(frecuencia_actual):
+    if changeShortcutIcon(currentFrequency):
         print("Iconos actualizados correctamente")
     else:
         print("Error al actualizar los iconos")
 
 if __name__ == "__main__":
-    main()  
+    main()

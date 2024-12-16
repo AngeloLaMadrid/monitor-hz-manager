@@ -4,52 +4,52 @@ import win32com.client
 import win32api
 import win32con
 
-def get_icon_path(hz):
+def getIconPath(hz):
     return os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'icons', f'{hz}_hz.ico'))
 
-CONFIGURACIONES_HZ = [60, 144]
+HZ_CONFIGURATIONS = [60, 144]
 
-def obtener_frecuencia_monitor():
+def getMonitorFrequency():
     try:
         hdc = ctypes.windll.user32.GetDC(0)
-        frecuencia = ctypes.windll.gdi32.GetDeviceCaps(hdc, 116)
+        frequency = ctypes.windll.gdi32.GetDeviceCaps(hdc, 116)
         ctypes.windll.user32.ReleaseDC(0, hdc)
-        return frecuencia
+        return frequency
     except:
         return 60
 
-def cambiar_frecuencia_monitor(frecuencia):
+def changeMonitorFrequency(frequency):
     try:
         device = win32api.EnumDisplayDevices(None, 0)
         settings = win32api.EnumDisplaySettings(device.DeviceName, win32con.ENUM_CURRENT_SETTINGS)
-        settings.DisplayFrequency = frecuencia
+        settings.DisplayFrequency = frequency
         return win32api.ChangeDisplaySettings(settings, 0) == win32con.DISP_CHANGE_SUCCESSFUL
     except:
         return False
 
-def cambiar_icono_acceso_directo(frecuencia):
+def changeShortcutIcon(frequency):
     try:
-        icono = get_icon_path(frecuencia)
-        if not os.path.exists(icono):
+        icon = getIconPath(frequency)
+        if not os.path.exists(icon):
             return False
             
-        shortcut_path = os.path.join(os.path.expanduser("~"), "Desktop", "verificar_hz.lnk")
-        shortcut = win32com.client.Dispatch("WScript.Shell").CreateShortCut(shortcut_path)
-        shortcut.IconLocation = f"{icono},0"
+        shortcutPath = os.path.join(os.path.expanduser("~"), "Desktop", "cambiar_hz.lnk")
+        shortcut = win32com.client.Dispatch("WScript.Shell").CreateShortCut(shortcutPath)
+        shortcut.IconLocation = f"{icon},0"
         shortcut.save()
         return True
     except:
         return False
 
 def main():
-    frecuencia_actual = obtener_frecuencia_monitor()
-    if frecuencia_actual not in CONFIGURACIONES_HZ:
+    currentFrequency = getMonitorFrequency()
+    if currentFrequency not in HZ_CONFIGURATIONS:
         return
         
-    siguiente = CONFIGURACIONES_HZ[1] if frecuencia_actual == CONFIGURACIONES_HZ[0] else CONFIGURACIONES_HZ[0]
+    nextFrequency = HZ_CONFIGURATIONS[1] if currentFrequency == HZ_CONFIGURATIONS[0] else HZ_CONFIGURATIONS[0]
     
-    if cambiar_frecuencia_monitor(siguiente):
-        cambiar_icono_acceso_directo(siguiente)
+    if changeMonitorFrequency(nextFrequency):
+        changeShortcutIcon(nextFrequency)
 
 if __name__ == "__main__":
     main()
