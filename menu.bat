@@ -21,6 +21,7 @@ goto menu
 
 :colocar_icono
 python "%~dp0src\python-code\crear_acceso_directo.py"
+echo ==========================================
 pause
 goto menu
 
@@ -31,6 +32,7 @@ set BAT_FILE=%STARTUP_DIR%\verificar_inicio.bat
 echo @echo off > "%BAT_FILE%"
 echo python "%SCRIPT_PATH%" >> "%BAT_FILE%"
 echo El archivo verificar_inicio.bat ha sido creado en el directorio de inicio.
+echo ==========================================
 pause
 goto menu
 
@@ -42,6 +44,7 @@ set BAT_FILE=%STARTUP_DIR%\verificar_inicio.bat
 echo @echo off > "%BAT_FILE%"
 echo python "%SCRIPT_PATH%" >> "%BAT_FILE%"
 echo El archivo verificar_inicio.bat ha sido creado en el directorio de inicio.
+echo ==========================================
 pause
 goto menu
 
