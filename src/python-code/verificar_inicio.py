@@ -8,10 +8,10 @@ def main():
         print(f"Frecuencia actual ({currentFrequency}Hz) no está soportada.")
         print(f"Las frecuencias soportadas son: {', '.join(str(hz) + 'Hz' for hz in HZ_CONFIGURATIONS)}")
         
-        # Cambiar al icono de error
+        # Cambiar al icono de error usando None en lugar de 'error'
         error_icon = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'icons', 'error.ico'))
         if os.path.exists(error_icon):
-            if changeShortcutIcon('error'):
+            if changeShortcutIcon(None):
                 print("Icono de error establecido")
             else:
                 print("Error al establecer icono de error")
