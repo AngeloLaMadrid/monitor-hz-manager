@@ -7,7 +7,7 @@ echo ==========================================
 echo            MENU PRINCIPAL
 echo ==========================================
 echo 1. Aplicar ambas acciones (RECOMENDADO!)
-echo 2. Crear un archivo bat en la carpeta de inicio
+echo 2. Ejecutar al inicio
 echo 3. Sincronizar icono con Hz al inicio (Evita problemas con iconos) 
 echo 4. Salir
 echo ==========================================

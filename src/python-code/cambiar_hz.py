@@ -29,7 +29,7 @@ def changeMonitorFrequency(frequency):
 
 def changeShortcutIcon(frequency):
     try:
-        icon = getIconPath(frequency)
+        icon = getErrorIconPath() if frequency is None else getIconPath(frequency)
         if not os.path.exists(icon):
             return False
             
@@ -41,11 +41,20 @@ def changeShortcutIcon(frequency):
     except:
         return False
 
+def getErrorIconPath():
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "icons", "error.ico"))
+
+
 def main():
     currentFrequency = getMonitorFrequency()
+    
     if currentFrequency not in HZ_CONFIGURATIONS:
+        print(f"¡Frecuencia inesperada detectada: {currentFrequency}Hz!")
+        print(f"Las frecuencias soportadas son: {', '.join(str(hz) + 'Hz' for hz in HZ_CONFIGURATIONS)}")
+        if changeShortcutIcon(None):  # None indicará usar icono de error
+            print("Icono de error establecido exitosamente")
         return
-        
+
     nextFrequency = HZ_CONFIGURATIONS[1] if currentFrequency == HZ_CONFIGURATIONS[0] else HZ_CONFIGURATIONS[0]
     
     if changeMonitorFrequency(nextFrequency):
