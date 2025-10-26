@@ -1,4 +1,4 @@
-<h1 align="center">RETO Monitor Hz Manager</h1>
+<h1 align="center">Simple Monitor Hz Manager</h1>
 
 <!-- Encabezado -->
 <h1 align="center">Monitor Hz Manager</h1>
